@@ -4,7 +4,6 @@
 import { onObjectFinalized } from 'firebase-functions/v2/storage';
 import * as admin from 'firebase-admin';
 import * as path from 'path';
-import sharp from 'sharp';
 
 export const onPhotoUpload = onObjectFinalized(
   { memory: '512MiB' },
@@ -27,6 +26,7 @@ export const onPhotoUpload = onObjectFinalized(
     const [buffer] = await file.download();
 
     // Generate thumbnail (400px wide)
+    const sharp = (await import('sharp')).default;
     const thumbnail = await sharp(buffer)
       .resize(400, null, { withoutEnlargement: true })
       .jpeg({ quality: 80 })

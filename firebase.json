@@ -20,14 +20,17 @@
     }
   ],
   "hosting": {
-    "source": "portal",
+    "public": "portal/out",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "frameworksBackend": {
-      "region": "us-central1"
-    }
+    "rewrites": [
+      {
+        "source": "/r/**",
+        "destination": "/report/index.html"
+      }
+    ]
   }
 }

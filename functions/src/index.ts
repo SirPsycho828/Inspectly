@@ -7,7 +7,8 @@ admin.initializeApp();
 
 // ─── Firestore Triggers ─────────────────────────────────────
 export { onUserDocWrite } from './triggers/onUserDocWrite';
-export { onPhotoUpload } from './triggers/onPhotoUpload';
+// TODO: Re-enable after Firebase Storage is initialized via Console
+// export { onPhotoUpload } from './triggers/onPhotoUpload';
 
 // ─── Callable Functions: User & Firm Management ─────────────
 export { redeemFirmInvite } from './callable/firm';
