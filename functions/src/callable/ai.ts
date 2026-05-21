@@ -54,7 +54,7 @@ function parseResponse(text: string, severity: string): { narrative: string; rec
 }
 
 export const generateNarrative = onCall(
-  { enforceAppCheck: false },
+  { enforceAppCheck: false, secrets: ['ANTHROPIC_API_KEY'] },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Authentication required');
@@ -88,7 +88,7 @@ Generate a professional inspection finding narrative and recommendation.`;
 );
 
 export const generateExecutiveSummary = onCall(
-  { enforceAppCheck: false },
+  { enforceAppCheck: false, secrets: ['ANTHROPIC_API_KEY'] },
   async (request) => {
     if (!request.auth) {
       throw new HttpsError('unauthenticated', 'Authentication required');

@@ -6,7 +6,7 @@ import * as admin from 'firebase-admin';
 import * as path from 'path';
 
 export const onPhotoUpload = onObjectFinalized(
-  { memory: '512MiB' },
+  { memory: '512MiB', region: 'us-east1' },
   async (event) => {
     const filePath = event.data.name;
     if (!filePath) return;

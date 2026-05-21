@@ -131,7 +131,7 @@ function setCorsHeaders(res: import('express').Response, origin?: string): void 
 // Returns: { token, expiresAt, report: ReportSummary }
 
 export const portalVerify = onRequest(
-  { cors: false },
+  { cors: false, secrets: ['PORTAL_JWT_SECRET'] },
   async (req, res) => {
     setCorsHeaders(res, req.headers.origin as string | undefined);
 
@@ -329,7 +329,7 @@ export const portalVerify = onRequest(
 // Headers: Authorization: Bearer <portal-session-token>
 
 export const portalGetReport = onRequest(
-  { cors: false },
+  { cors: false, secrets: ['PORTAL_JWT_SECRET'] },
   async (req, res) => {
     setCorsHeaders(res, req.headers.origin as string | undefined);
 
@@ -421,7 +421,7 @@ export const portalGetReport = onRequest(
 // Headers: Authorization: Bearer <portal-session-token>
 
 export const portalGetPdf = onRequest(
-  { cors: false },
+  { cors: false, secrets: ['PORTAL_JWT_SECRET'] },
   async (req, res) => {
     setCorsHeaders(res, req.headers.origin as string | undefined);
 
