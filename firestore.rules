@@ -1,0 +1,129 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Helper Functions ───────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isFirmAdmin() {
+      return isAuthenticated() && request.auth.token.role == 'firm_admin';
+    }
+
+    function isInFirm(firmId) {
+      return isAuthenticated() && request.auth.token.firmId == firmId;
+    }
+
+    function isFirmAdminOf(firmId) {
+      return isFirmAdmin() && isInFirm(firmId);
+    }
+
+    // ─── Users ──────────────────────────────────────────────
+
+    match /users/{userId} {
+      allow read: if isOwner(userId)
+        || (isFirmAdmin() && resource.data.firmId == request.auth.token.firmId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false; // Soft delete via Cloud Function
+    }
+
+    // ─── Firms ──────────────────────────────────────────────
+
+    match /firms/{firmId} {
+      allow read: if isInFirm(firmId);
+      allow create: if isAuthenticated();
+      allow update: if isFirmAdminOf(firmId);
+      allow delete: if false;
+
+      match /invites/{inviteId} {
+        allow read: if isFirmAdminOf(firmId);
+        allow create: if isFirmAdminOf(firmId);
+        allow update: if false; // Managed by Cloud Function
+        allow delete: if isFirmAdminOf(firmId);
+      }
+    }
+
+    // ─── Inspections ────────────────────────────────────────
+
+    match /inspections/{inspectionId} {
+      allow read: if isOwner(resource.data.inspectorId)
+        || (isFirmAdmin() && isInFirm(resource.data.firmId));
+      allow create: if isAuthenticated() && request.resource.data.inspectorId == request.auth.uid;
+      allow update: if isOwner(resource.data.inspectorId)
+        && resource.data.status != 'published';
+      allow delete: if false;
+
+      // Findings subcollection
+      match /findings/{findingId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.inspectorId)
+          || (isFirmAdmin() && isInFirm(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.firmId));
+        allow create, update: if isOwner(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.inspectorId);
+        allow delete: if isOwner(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.inspectorId);
+      }
+
+      // Checklist progress subcollection
+      match /checklistProgress/{itemId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.inspectorId)
+          || (isFirmAdmin() && isInFirm(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.firmId));
+        allow create, update: if isOwner(get(/databases/$(database)/documents/inspections/$(inspectionId)).data.inspectorId);
+        allow delete: if false;
+      }
+    }
+
+    // ─── Reports ────────────────────────────────────────────
+
+    match /reports/{reportId} {
+      allow read: if isOwner(resource.data.inspectorId)
+        || (isFirmAdmin() && isInFirm(resource.data.firmId));
+      allow create: if false; // Created by Cloud Function only
+      allow update: if false; // Immutable, amendments via Cloud Function
+      allow delete: if false;
+
+      // Access codes — managed by Cloud Functions, read by inspector
+      match /accessCodes/{codeId} {
+        allow read: if isOwner(get(/databases/$(database)/documents/reports/$(reportId)).data.inspectorId);
+        allow write: if false; // Managed by Cloud Functions
+      }
+    }
+
+    // ─── Checklist Templates ────────────────────────────────
+
+    match /checklistTemplates/{templateId} {
+      allow read: if isAuthenticated()
+        && (resource.data.ownerId == 'system'
+          || resource.data.ownerId == request.auth.uid
+          || (resource.data.firmId != null && isInFirm(resource.data.firmId)));
+      allow create: if isAuthenticated()
+        && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isOwner(resource.data.ownerId);
+      allow delete: if isOwner(resource.data.ownerId);
+    }
+
+    // ─── Comment Library ────────────────────────────────────
+
+    match /commentLibrary/{entryId} {
+      allow read: if isAuthenticated()
+        && (resource.data.ownerId == request.auth.uid
+          || (resource.data.firmId != null && isInFirm(resource.data.firmId)));
+      allow create: if isAuthenticated()
+        && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isOwner(resource.data.ownerId);
+      allow delete: if isOwner(resource.data.ownerId)
+        || (resource.data.firmId != null && isFirmAdminOf(resource.data.firmId));
+    }
+
+    // ─── Notification Log (operational) ─────────────────────
+
+    match /notificationLog/{logId} {
+      allow read: if false; // Internal only
+      allow write: if false; // Written by Cloud Functions
+    }
+  }
+}

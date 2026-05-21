@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "Inspectly",
+    "slug": "inspectly",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D9488"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.inspectly.mobile",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Inspectly needs camera access to capture inspection photos.",
+        "NSPhotoLibraryUsageDescription": "Inspectly needs photo library access to attach existing photos to inspection findings.",
+        "NSLocationWhenInUseUsageDescription": "Inspectly uses your location to auto-fill the property address during inspection setup."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0D9488"
+      },
+      "package": "app.inspectly.mobile",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Inspectly needs camera access to capture inspection photos."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Inspectly needs photo library access to attach existing photos."
+        }
+      ]
+    ]
+  }
+}

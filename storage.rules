@@ -1,0 +1,44 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Inspection photos — inspector can upload to their own inspections
+    match /inspections/{inspectionId}/photos/{photoFile} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024 // 5MB max
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Report photos (baked annotations) — created by Cloud Functions only
+    match /reports/{reportId}/photos/{photoFile} {
+      allow read: if true; // Served via signed URLs, public read OK
+      allow write: if false; // Cloud Functions only
+    }
+
+    // Branding logos — personal
+    match /branding/{userId}/{fileName} {
+      allow read: if true; // Logos are public
+      allow write: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.size < 2 * 1024 * 1024 // 2MB max
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Branding logos — firm
+    match /branding/firms/{firmId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.role == 'firm_admin'
+        && request.auth.token.firmId == firmId
+        && request.resource.size < 2 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    // Report PDFs
+    match /reports/{reportId}/pdf/{fileName} {
+      allow read: if true; // Served via signed URLs
+      allow write: if false; // Cloud Functions only
+    }
+  }
+}
