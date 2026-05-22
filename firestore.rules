@@ -96,10 +96,7 @@ service cloud.firestore {
     // ─── Checklist Templates ────────────────────────────────
 
     match /checklistTemplates/{templateId} {
-      allow read: if isAuthenticated()
-        && (resource.data.ownerId == 'system'
-          || resource.data.ownerId == request.auth.uid
-          || (resource.data.firmId != null && isInFirm(resource.data.firmId)));
+      allow read: if isAuthenticated();
       allow create: if isAuthenticated()
         && request.resource.data.ownerId == request.auth.uid;
       allow update: if isOwner(resource.data.ownerId);

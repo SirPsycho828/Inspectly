@@ -154,8 +154,8 @@ function SeverityBarChart({ counts }: { counts: Report['findingCounts'] }) {
         {segments.map(s => (
           <div key={s.key} className="flex items-center gap-1.5 text-sm">
             <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }} />
-            <span className="text-slate-600">{s.label}</span>
-            <span className="font-semibold text-slate-900">{counts[s.key]}</span>
+            <span className="text-muted-foreground">{s.label}</span>
+            <span className="font-semibold text-foreground">{counts[s.key]}</span>
           </div>
         ))}
       </div>
@@ -176,7 +176,7 @@ function FindingCard({
 
   return (
     <div
-      className="rounded-xl border bg-white overflow-hidden"
+      className="rounded-lg border bg-card overflow-hidden"
       style={{ borderColor: cfg.border }}
     >
       {/* Finding header */}
@@ -184,16 +184,16 @@ function FindingCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
             <SeverityBadge severity={finding.severity} />
-            <h4 className="font-semibold text-slate-900 text-sm">{finding.component}</h4>
+            <h4 className="font-heading font-semibold text-foreground text-sm">{finding.component}</h4>
           </div>
-          <p className="text-slate-600 text-sm">{finding.condition}</p>
+          <p className="text-muted-foreground text-sm">{finding.condition}</p>
         </div>
       </div>
 
       {/* Body */}
       <div className="px-5 py-4 space-y-4">
         {/* Narrative */}
-        <p className="text-slate-700 text-sm leading-relaxed">{finding.narrative}</p>
+        <p className="text-secondary-foreground text-sm leading-relaxed">{finding.narrative}</p>
 
         {/* Recommendation */}
         {finding.recommendation && (
@@ -201,14 +201,14 @@ function FindingCard({
             <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: cfg.color }}>
               Recommendation
             </p>
-            <p className="text-slate-600 text-sm italic leading-relaxed">{finding.recommendation}</p>
+            <p className="text-muted-foreground text-sm italic leading-relaxed">{finding.recommendation}</p>
           </div>
         )}
 
         {/* Photos */}
         {finding.photos.length > 0 && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">
               Photos ({finding.photos.length})
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
@@ -216,7 +216,7 @@ function FindingCard({
                 <button
                   key={i}
                   onClick={() => onPhotoClick(finding.photos, i)}
-                  className="aspect-square rounded-lg overflow-hidden border border-slate-200 hover:border-teal-400 hover:ring-2 hover:ring-teal-200 transition-all focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  className="aspect-square rounded-lg overflow-hidden border border-border hover:border-accent hover:ring-2 hover:ring-accent/30 transition-all focus:outline-none focus:ring-2 focus:ring-ring"
                   aria-label={`View photo: ${photo.caption || `Photo ${i + 1}`}`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -256,7 +256,7 @@ function SectionBlock({
       {/* Section header */}
       <button
         onClick={() => setCollapsed(c => !c)}
-        className="w-full flex items-center justify-between px-5 py-4 rounded-xl text-left mb-3 hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-teal-400"
+        className="w-full flex items-center justify-between px-5 py-4 rounded-lg text-left mb-3 hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring"
         style={{ backgroundColor: primaryColor }}
         aria-expanded={!collapsed}
       >
@@ -284,7 +284,7 @@ function SectionBlock({
       {!collapsed && (
         <div className="space-y-4 pl-2">
           {section.findings.length === 0 ? (
-            <p className="text-slate-400 text-sm italic px-3">No findings in this section.</p>
+            <p className="text-muted-foreground text-sm italic px-3">No findings in this section.</p>
           ) : (
             section.findings.map((finding, i) => (
               <FindingCard key={i} finding={finding} onPhotoClick={onPhotoClick} />
@@ -314,7 +314,7 @@ function TableOfContents({
 
   return (
     <nav className="space-y-1" aria-label="Table of contents">
-      <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 px-3 mb-3">
+      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-3 mb-3">
         Sections
       </p>
       {sections.map(s => {
@@ -328,7 +328,7 @@ function TableOfContents({
             className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all flex items-center justify-between gap-2 ${
               isActive
                 ? 'font-semibold'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             }`}
             style={isActive ? { backgroundColor: `${primaryColor}15`, color: primaryColor } : {}}
           >
@@ -345,7 +345,7 @@ function TableOfContents({
                 </span>
               )}
               {critCount === 0 && majCount === 0 && s.findings.length > 0 && (
-                <span className="text-slate-300 text-xs">{s.findings.length}</span>
+                <span className="text-muted text-xs">{s.findings.length}</span>
               )}
             </span>
           </button>
@@ -364,16 +364,16 @@ function SummaryTable({ sections }: { sections: ReportSection[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-slate-200">
+    <div className="overflow-x-auto rounded-lg border border-border">
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-slate-50 border-b border-slate-200">
-            <th className="text-left px-4 py-3 font-semibold text-slate-700">Section</th>
+          <tr className="bg-muted/50 border-b border-border">
+            <th className="text-left px-4 py-3 font-semibold text-secondary-foreground">Section</th>
             <th className="text-center px-3 py-3 font-semibold text-red-600">Critical</th>
             <th className="text-center px-3 py-3 font-semibold text-orange-500">Major</th>
             <th className="text-center px-3 py-3 font-semibold text-yellow-600">Minor</th>
             <th className="text-center px-3 py-3 font-semibold text-blue-500">Info</th>
-            <th className="text-center px-3 py-3 font-semibold text-slate-500">Total</th>
+            <th className="text-center px-3 py-3 font-semibold text-muted-foreground">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -388,41 +388,41 @@ function SummaryTable({ sections }: { sections: ReportSection[] }) {
             return (
               <tr
                 key={s.sectionId}
-                className={`border-b border-slate-100 cursor-pointer hover:bg-teal-50 transition-colors ${
-                  i % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'
+                className={`border-b border-border cursor-pointer hover:bg-accent/10 transition-colors ${
+                  i % 2 === 0 ? 'bg-card' : 'bg-muted/30'
                 }`}
                 onClick={() => scrollTo(s.sectionId)}
               >
-                <td className="px-4 py-3 font-medium text-slate-800 hover:text-teal-700">{s.title}</td>
+                <td className="px-4 py-3 font-medium text-foreground hover:text-accent">{s.title}</td>
                 <td className="text-center px-3 py-3">
                   {counts.critical > 0 ? (
                     <span className="font-bold text-red-600">{counts.critical}</span>
                   ) : (
-                    <span className="text-slate-300">—</span>
+                    <span className="text-muted">—</span>
                   )}
                 </td>
                 <td className="text-center px-3 py-3">
                   {counts.major > 0 ? (
                     <span className="font-bold text-orange-500">{counts.major}</span>
                   ) : (
-                    <span className="text-slate-300">—</span>
+                    <span className="text-muted">—</span>
                   )}
                 </td>
                 <td className="text-center px-3 py-3">
                   {counts.minor > 0 ? (
                     <span className="font-bold text-yellow-600">{counts.minor}</span>
                   ) : (
-                    <span className="text-slate-300">—</span>
+                    <span className="text-muted">—</span>
                   )}
                 </td>
                 <td className="text-center px-3 py-3">
                   {counts.informational > 0 ? (
                     <span className="font-bold text-blue-500">{counts.informational}</span>
                   ) : (
-                    <span className="text-slate-300">—</span>
+                    <span className="text-muted">—</span>
                   )}
                 </td>
-                <td className="text-center px-3 py-3 font-semibold text-slate-700">{total}</td>
+                <td className="text-center px-3 py-3 font-semibold text-secondary-foreground">{total}</td>
               </tr>
             );
           })}
@@ -498,7 +498,7 @@ function PdfDownloadButton({ reportId, token }: { reportId: string; token: strin
     <button
       onClick={handleDownload}
       disabled={state === 'loading'}
-      className="flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white rounded-lg text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
+      className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 disabled:bg-primary/60 text-white rounded-lg text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
     >
       {state === 'loading' ? (
         <>
@@ -565,9 +565,9 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
     report.findingCounts.minor + report.findingCounts.informational;
 
   return (
-    <div className="min-h-screen bg-slate-50" ref={mainRef}>
+    <div className="min-h-screen bg-muted/50" ref={mainRef}>
       {/* ── Sticky Top Bar ────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
+      <header className="sticky top-0 z-30 bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {/* Left: logo / firm name */}
           <div className="flex items-center gap-3 min-w-0 flex-shrink-0">
@@ -586,7 +586,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
                 >
                   <FileText className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-bold text-slate-900 text-sm truncate max-w-[140px]">
+                <span className="font-bold text-foreground text-sm truncate max-w-[140px]">
                   {report.firmName || 'Inspectly'}
                 </span>
               </div>
@@ -594,7 +594,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
           </div>
 
           {/* Center: address */}
-          <div className="hidden sm:flex items-center gap-1.5 text-slate-500 text-sm min-w-0">
+          <div className="hidden sm:flex items-center gap-1.5 text-muted-foreground text-sm min-w-0">
             <MapPin className="w-4 h-4 flex-shrink-0" />
             <span className="truncate">{propertyAddress}</span>
           </div>
@@ -603,7 +603,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* Mobile TOC toggle */}
             <button
-              className="lg:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors"
               onClick={() => setTocOpen(o => !o)}
               aria-label="Toggle table of contents"
             >
@@ -618,10 +618,10 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
       {tocOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
           <div className="absolute inset-0 bg-black/50" onClick={() => setTocOpen(false)} />
-          <div className="relative ml-auto w-72 bg-white h-full overflow-y-auto shadow-xl p-5">
+          <div className="relative ml-auto w-72 bg-card h-full overflow-y-auto shadow-xl p-5">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="font-bold text-slate-900">Table of Contents</h2>
-              <button onClick={() => setTocOpen(false)} className="p-1 rounded text-slate-400 hover:text-slate-700">
+              <h2 className="font-heading font-bold text-foreground">Table of Contents</h2>
+              <button onClick={() => setTocOpen(false)} className="p-1 rounded text-muted-foreground hover:text-secondary-foreground">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -639,7 +639,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
         <div className="flex gap-8">
           {/* Sidebar TOC — desktop */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="sticky top-24 bg-white rounded-xl border border-slate-200 p-4 max-h-[calc(100vh-8rem)] overflow-y-auto">
+            <div className="sticky top-24 bg-card rounded-lg border border-border p-4 max-h-[calc(100vh-8rem)] overflow-y-auto">
               <TableOfContents
                 sections={report.sections}
                 primaryColor={primaryColor}
@@ -651,16 +651,16 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
           {/* Main content */}
           <main className="flex-1 min-w-0 space-y-8">
             {/* ── Cover Card ──────────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+            <div className="bg-card rounded-lg border border-border overflow-hidden shadow-sm">
               {/* Color banner */}
               <div className="h-2" style={{ backgroundColor: primaryColor }} />
               <div className="p-6 sm:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                   <div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-1">
+                    <h1 className="font-heading text-2xl sm:text-3xl font-bold text-foreground mb-1">
                       Inspection Report
                     </h1>
-                    <p className="text-slate-500 text-sm">Report v{report.version}</p>
+                    <p className="text-muted-foreground text-sm">Report v{report.version}</p>
                   </div>
                   <div
                     className="flex-shrink-0 px-4 py-2 rounded-lg text-sm font-semibold text-white"
@@ -674,48 +674,48 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <MapPin className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                      <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-0.5">Property</p>
-                        <p className="text-slate-900 font-medium">{report.property.address}</p>
-                        <p className="text-slate-600 text-sm">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Property</p>
+                        <p className="text-foreground font-medium">{report.property.address}</p>
+                        <p className="text-muted-foreground text-sm">
                           {report.property.city}, {report.property.state} {report.property.zip}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <Calendar className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                      <Calendar className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-0.5">Inspection Date</p>
-                        <p className="text-slate-900 font-medium">{publishedDate}</p>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Inspection Date</p>
+                        <p className="text-foreground font-medium">{publishedDate}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <User className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                      <User className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-0.5">Inspector</p>
-                        <p className="text-slate-900 font-medium">{report.inspectorName}</p>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Inspector</p>
+                        <p className="text-foreground font-medium">{report.inspectorName}</p>
                         {report.inspectorLicense && (
-                          <p className="text-slate-500 text-sm">License #{report.inspectorLicense}</p>
+                          <p className="text-muted-foreground text-sm">License #{report.inspectorLicense}</p>
                         )}
                         {report.firmName && (
-                          <p className="text-slate-600 text-sm">{report.firmName}</p>
+                          <p className="text-muted-foreground text-sm">{report.firmName}</p>
                         )}
                       </div>
                     </div>
                     {(report.property.yearBuilt || report.property.squareFootage) && (
                       <div className="flex items-start gap-3">
-                        <FileText className="w-4 h-4 text-slate-400 mt-0.5 flex-shrink-0" />
+                        <FileText className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-0.5">Property Details</p>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Property Details</p>
                           {report.property.yearBuilt && (
-                            <p className="text-slate-600 text-sm">Built {report.property.yearBuilt}</p>
+                            <p className="text-muted-foreground text-sm">Built {report.property.yearBuilt}</p>
                           )}
                           {report.property.squareFootage && (
-                            <p className="text-slate-600 text-sm">
+                            <p className="text-muted-foreground text-sm">
                               {report.property.squareFootage.toLocaleString()} sq ft
                             </p>
                           )}
@@ -726,18 +726,18 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
                 </div>
 
                 {/* Stats pills */}
-                <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap gap-3">
-                  <div className="bg-slate-50 rounded-lg px-4 py-2 text-center min-w-[80px]">
-                    <p className="text-2xl font-bold text-slate-900">{totalFindings}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Total Findings</p>
+                <div className="mt-6 pt-5 border-t border-border flex flex-wrap gap-3">
+                  <div className="bg-muted/50 rounded-lg px-4 py-2 text-center min-w-[80px]">
+                    <p className="text-2xl font-bold text-foreground">{totalFindings}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Total Findings</p>
                   </div>
-                  <div className="bg-slate-50 rounded-lg px-4 py-2 text-center min-w-[80px]">
-                    <p className="text-2xl font-bold text-slate-900">{report.sections.length}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Sections</p>
+                  <div className="bg-muted/50 rounded-lg px-4 py-2 text-center min-w-[80px]">
+                    <p className="text-2xl font-bold text-foreground">{report.sections.length}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Sections</p>
                   </div>
-                  <div className="bg-slate-50 rounded-lg px-4 py-2 text-center min-w-[80px]">
-                    <p className="text-2xl font-bold text-slate-900">{report.totalPhotos}</p>
-                    <p className="text-xs text-slate-500 mt-0.5">Photos</p>
+                  <div className="bg-muted/50 rounded-lg px-4 py-2 text-center min-w-[80px]">
+                    <p className="text-2xl font-bold text-foreground">{report.totalPhotos}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Photos</p>
                   </div>
                   {report.findingCounts.critical > 0 && (
                     <div className="bg-red-50 rounded-lg px-4 py-2 text-center min-w-[80px]">
@@ -750,8 +750,8 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
             </div>
 
             {/* ── Executive Summary ────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <div className="bg-card rounded-lg border border-border p-6 sm:p-8 shadow-sm">
+              <h2 className="font-heading text-lg font-bold text-foreground mb-4 flex items-center gap-2">
                 <span
                   className="w-1 h-6 rounded-full block"
                   style={{ backgroundColor: '#0D9488' }}
@@ -762,22 +762,22 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
                 className="border-l-4 pl-5 py-1"
                 style={{ borderColor: primaryColor }}
               >
-                <p className="text-slate-700 leading-relaxed text-sm sm:text-base whitespace-pre-line">
+                <p className="text-secondary-foreground leading-relaxed text-sm sm:text-base whitespace-pre-line">
                   {report.executiveSummary}
                 </p>
               </div>
             </div>
 
             {/* ── Severity Overview ────────────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-5">Findings Overview</h2>
+            <div className="bg-card rounded-lg border border-border p-6 sm:p-8 shadow-sm">
+              <h2 className="font-heading text-lg font-bold text-foreground mb-5">Findings Overview</h2>
               <SeverityBarChart counts={report.findingCounts} />
             </div>
 
             {/* ── Inspection Summary Table ─────────────────────────────── */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
-              <h2 className="text-lg font-bold text-slate-900 mb-5">Inspection Summary</h2>
-              <p className="text-sm text-slate-500 mb-4">Click a row to jump to that section.</p>
+            <div className="bg-card rounded-lg border border-border p-6 sm:p-8 shadow-sm">
+              <h2 className="font-heading text-lg font-bold text-foreground mb-5">Inspection Summary</h2>
+              <p className="text-sm text-muted-foreground mb-4">Click a row to jump to that section.</p>
               <SummaryTable sections={report.sections} />
             </div>
 
@@ -794,7 +794,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
             </div>
 
             {/* ── Footer ──────────────────────────────────────────────── */}
-            <footer className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+            <footer className="bg-card rounded-lg border border-border p-6 sm:p-8 shadow-sm">
               <div
                 className="h-1 rounded-full mb-6"
                 style={{ backgroundColor: primaryColor }}
@@ -802,9 +802,9 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
                 <div>
                   {report.firmName && (
-                    <p className="font-bold text-slate-900 mb-2">{report.firmName}</p>
+                    <p className="font-bold text-foreground mb-2">{report.firmName}</p>
                   )}
-                  <div className="space-y-1 text-sm text-slate-600">
+                  <div className="space-y-1 text-sm text-muted-foreground">
                     {report.branding.companyPhone && (
                       <p>{report.branding.companyPhone}</p>
                     )}
@@ -835,12 +835,12 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
                   </div>
                 </div>
                 {report.branding.reportFooterText && (
-                  <div className="sm:max-w-sm text-xs text-slate-400 leading-relaxed">
+                  <div className="sm:max-w-sm text-xs text-muted-foreground leading-relaxed">
                     {report.branding.reportFooterText}
                   </div>
                 )}
               </div>
-              <p className="text-xs text-slate-300 mt-6 text-center">
+              <p className="text-xs text-muted mt-6 text-center">
                 Report generated {publishedDate} &bull; Inspectly
               </p>
             </footer>
@@ -852,7 +852,7 @@ export function ReportViewer({ report, reportId, token }: ReportViewerProps) {
       {showBackToTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-30 w-12 h-12 rounded-full bg-slate-900 text-white shadow-lg hover:bg-slate-700 transition-colors flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+          className="fixed bottom-6 right-6 z-30 w-12 h-12 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-colors flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           aria-label="Back to top"
         >
           <ArrowUp className="w-5 h-5" />

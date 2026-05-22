@@ -8,6 +8,7 @@ import { AuthNavigator } from './AuthNavigator';
 import { OnboardingNavigator } from './OnboardingNavigator';
 import { MainTabNavigator } from './MainTabNavigator';
 import { SuspendedScreen } from '@/screens/auth/SuspendedScreen';
+import { VerifyEmailScreen } from '@/screens/auth/VerifyEmailScreen';
 import { LoadingScreen } from '@/screens/LoadingScreen';
 
 const Stack = createNativeStackNavigator();
@@ -19,8 +20,10 @@ export function RootNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, animation: 'none' }}>
-      {authState === 'unauthenticated' || authState === 'unverified' ? (
+      {authState === 'unauthenticated' ? (
         <Stack.Screen name="Auth" component={AuthNavigator} />
+      ) : authState === 'unverified' ? (
+        <Stack.Screen name="VerifyEmail" component={VerifyEmailScreen} />
       ) : authState === 'needs_onboarding' ? (
         <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
       ) : authState === 'suspended' ? (

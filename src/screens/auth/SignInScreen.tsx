@@ -13,7 +13,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '@/navigation/AuthNavigator';
 import { Button } from '@/components/ui';
 import { colors, typography, spacing, layout, touchTargets } from '@/constants/theme';
-import { signInWithEmail } from '@/services/auth';
+import { signInWithEmail, signInWithGoogle } from '@/services/auth';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -159,8 +159,14 @@ export function SignInScreen({ navigation }: Props) {
           {/* Google OAuth button */}
           <Button
             title="Continue with Google"
-            onPress={() => {
-              // Google OAuth — to be wired up with Google Sign-In SDK
+            onPress={async () => {
+              try {
+                await signInWithGoogle();
+              } catch (err: any) {
+                if (err?.code !== 'SIGN_IN_CANCELLED') {
+                  setFormError('Google sign-in failed. Please try again.');
+                }
+              }
             }}
             variant="secondary"
             fullWidth

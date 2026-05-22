@@ -3,8 +3,13 @@
 
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { COLLECTIONS } from '@/constants/collections';
 import type { AuthState, User } from '@/types';
+
+GoogleSignin.configure({
+  webClientId: 'REDACTED_SENDER_ID-hujpoo8q8uoh4kodnr4q4pbh1vo5o9id.apps.googleusercontent.com',
+});
 
 export function getAuthState(
   firebaseUser: FirebaseAuthTypes.User | null,
@@ -29,6 +34,15 @@ export async function signUpWithEmail(email: string, password: string) {
   const result = await auth().createUserWithEmailAndPassword(email, password);
   await result.user.sendEmailVerification();
   return result;
+}
+
+export async function signInWithGoogle() {
+  await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+  const response = await GoogleSignin.signIn();
+  const idToken = response.data?.idToken;
+  if (!idToken) throw new Error('No ID token from Google Sign-In');
+  const credential = auth.GoogleAuthProvider.credential(idToken);
+  return auth().signInWithCredential(credential);
 }
 
 export async function sendPasswordReset(email: string) {

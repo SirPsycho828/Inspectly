@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   fullWidth: {
-    flex: 1,
+    width: '100%',
   },
   disabled: {
     opacity: 0.5,
