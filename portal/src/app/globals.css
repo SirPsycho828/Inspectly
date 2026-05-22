@@ -109,3 +109,130 @@ h1, h2, h3, h4 {
 .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
 .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
 .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+
+/* ------------------------------------------------------------------ */
+/*  Micro-Interactions                                                  */
+/* ------------------------------------------------------------------ */
+
+/* Buttons — hover lift + active press */
+.btn-interactive {
+  transition: transform 150ms var(--ease-default),
+              box-shadow 150ms var(--ease-default),
+              filter 150ms var(--ease-default);
+}
+.btn-interactive:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+.btn-interactive:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Cards — hover lift */
+.card-interactive {
+  transition: transform 200ms var(--ease-default),
+              box-shadow 200ms var(--ease-default);
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Form inputs — focus glow */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 3px oklch(from var(--color-ring) l c h / 0.15);
+  transition: border-color 150ms var(--ease-default),
+              box-shadow 150ms var(--ease-default);
+}
+
+/* Links — underline reveal */
+.link-underline {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: left bottom;
+  background-repeat: no-repeat;
+  transition: background-size 200ms var(--ease-default);
+}
+.link-underline:hover {
+  background-size: 100% 1px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Scroll-Triggered Reveals                                            */
+/* ------------------------------------------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 500ms var(--ease-out),
+              transform 500ms var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays for children inside reveal containers */
+.reveal-stagger > .reveal:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger > .reveal:nth-child(2) { transition-delay: 100ms; }
+.reveal-stagger > .reveal:nth-child(3) { transition-delay: 200ms; }
+.reveal-stagger > .reveal:nth-child(4) { transition-delay: 300ms; }
+.reveal-stagger > .reveal:nth-child(5) { transition-delay: 400ms; }
+.reveal-stagger > .reveal:nth-child(6) { transition-delay: 500ms; }
+.reveal-stagger > .reveal:nth-child(7) { transition-delay: 600ms; }
+.reveal-stagger > .reveal:nth-child(8) { transition-delay: 700ms; }
+
+/* ------------------------------------------------------------------ */
+/*  Hero Load Orchestration                                             */
+/* ------------------------------------------------------------------ */
+
+@keyframes hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-orchestrate > *:nth-child(1) { animation: hero-enter 500ms var(--ease-out) 100ms both; }
+.hero-orchestrate > *:nth-child(2) { animation: hero-enter 500ms var(--ease-out) 250ms both; }
+.hero-orchestrate > *:nth-child(3) { animation: hero-enter 500ms var(--ease-out) 400ms both; }
+.hero-orchestrate > *:nth-child(4) { animation: hero-enter 500ms var(--ease-out) 550ms both; }
+.hero-orchestrate > *:nth-child(5) { animation: hero-enter 500ms var(--ease-out) 700ms both; }
+
+/* ------------------------------------------------------------------ */
+/*  Image Treatments                                                    */
+/* ------------------------------------------------------------------ */
+
+.img-hover-zoom {
+  overflow: hidden;
+}
+.img-hover-zoom img {
+  transition: transform 300ms var(--ease-default);
+}
+.img-hover-zoom:hover img {
+  transform: scale(1.05);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Reduced Motion — MUST be last to override all above                 */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

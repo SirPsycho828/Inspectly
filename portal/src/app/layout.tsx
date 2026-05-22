@@ -24,7 +24,25 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              console.log(
+                '%c' + [
+                  '╦╔╗╔╔═╗╔═╗╔═╗╔═╗╔╦╗╦  ╦ ╦',
+                  '║║║║╚═╗╠═╝║╣ ║   ║ ║  ╚╦╝',
+                  '╩╝╚╝╚═╝╩  ╚═╝╚═╝ ╩ ╩═╝ ╩ ',
+                ].join('\\n'),
+                'color: #C29650; font-family: monospace; font-size: 14px; font-weight: bold;'
+              );
+              console.log('%cThe clipboard retires today.', 'color: #3B2F27; font-size: 13px; font-family: Georgia, serif;');
+              console.log('%cinspectly-prod-app.web.app', 'color: #7A726B; font-size: 11px;');
+            `,
+          }}
+        />
+      </body>
     </html>
   );
 }
