@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Sparkles,
@@ -159,7 +159,7 @@ function SplitHero() {
             className="absolute inset-0 bg-cover bg-center opacity-[0.12]"
             style={{ backgroundImage: "url('/images/hero-house.jpg')" }}
           />
-          <div className="relative max-w-lg">
+          <div className="hero-orchestrate relative max-w-lg">
             <span className="inline-block rounded-sm bg-accent/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-accent">
               With Inspectly
             </span>
@@ -175,7 +175,7 @@ function SplitHero() {
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
                 href="/signup"
-                className="inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-md transition-all hover:brightness-110"
+                className="btn-interactive inline-flex items-center gap-2 rounded-md bg-accent px-6 py-3 text-base font-semibold text-accent-foreground shadow-md transition-all hover:brightness-110"
               >
                 Start Free
                 <ArrowRight className="h-4 w-4" />
@@ -251,7 +251,7 @@ function PairedComparisons() {
   return (
     <section id="features" className="scroll-mt-20 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-700 text-foreground sm:text-4xl">
             Every pain point, solved
           </h2>
@@ -275,7 +275,7 @@ function PairedComparisons() {
               >
                 {/* Old Way Card */}
                 <div
-                  className={`rounded-lg border border-border bg-muted/50 p-6 sm:p-8 ${
+                  className={`reveal card-interactive rounded-lg border border-border bg-muted/50 p-6 sm:p-8 ${
                     reverse ? 'lg:order-2' : ''
                   }`}
                 >
@@ -299,7 +299,7 @@ function PairedComparisons() {
 
                 {/* New Way Card */}
                 <div
-                  className={`rounded-lg border border-accent/30 bg-card p-6 shadow-sm sm:p-8 ${
+                  className={`reveal card-interactive rounded-lg border border-accent/30 bg-card p-6 shadow-sm sm:p-8 ${
                     reverse ? 'lg:order-1' : ''
                   }`}
                 >
@@ -349,9 +349,9 @@ function StatsSection() {
       />
       <div className="absolute inset-0 bg-primary/90" />
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
+        <div className="reveal-stagger grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
           {stats.map((s) => (
-            <div key={s.label} className="text-center">
+            <div key={s.label} className="reveal text-center">
               <p className="font-heading text-4xl font-700 text-accent sm:text-5xl">{s.value}</p>
               <p className="mt-2 text-sm font-semibold text-primary-foreground">{s.label}</p>
               <p className="mt-0.5 text-xs text-primary-foreground/50">{s.detail}</p>
@@ -435,7 +435,7 @@ function Pricing() {
   return (
     <section id="pricing" className="scroll-mt-20 bg-muted/40 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-700 text-foreground sm:text-4xl">
             Simple, honest pricing
           </h2>
@@ -443,11 +443,11 @@ function Pricing() {
             Start free. Upgrade when your business grows. No hidden fees.
           </p>
         </div>
-        <div className="mt-16 grid gap-6 md:grid-cols-2 lg:mx-auto lg:max-w-4xl">
+        <div className="reveal-stagger mt-16 grid gap-6 md:grid-cols-2 lg:mx-auto lg:max-w-4xl">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative flex flex-col rounded-lg border p-8 transition-shadow hover:shadow-lg ${
+              className={`reveal card-interactive relative flex flex-col rounded-lg border p-8 ${
                 plan.featured
                   ? 'border-accent bg-card shadow-md'
                   : 'border-border bg-card'
@@ -476,7 +476,7 @@ function Pricing() {
               </ul>
               <Link
                 href={plan.href}
-                className={`block w-full rounded-md py-3 text-center text-sm font-semibold transition-all ${
+                className={`btn-interactive block w-full rounded-md py-3 text-center text-sm font-semibold transition-all ${
                   plan.featured
                     ? 'bg-accent text-accent-foreground shadow-sm hover:brightness-110'
                     : 'border border-border bg-card text-foreground hover:border-accent hover:shadow-sm'
@@ -505,7 +505,7 @@ function CallToAction() {
       />
       <div className="absolute inset-0 bg-primary/92" />
       <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="reveal mx-auto max-w-2xl text-center">
           <h2 className="font-heading text-3xl font-700 text-primary-foreground sm:text-4xl">
             Ready to leave the clipboard behind?
           </h2>
@@ -516,7 +516,7 @@ function CallToAction() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-accent-foreground shadow-md transition-all hover:brightness-110"
+              className="btn-interactive inline-flex items-center gap-2 rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-accent-foreground shadow-md transition-all hover:brightness-110"
             >
               Start Free
               <ArrowRight className="h-4 w-4" />
@@ -603,6 +603,22 @@ function Footer() {
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+    document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <Navbar />

@@ -189,10 +189,11 @@ function SignupForm() {
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label htmlFor="signup-email" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Email
               </label>
               <input
+                id="signup-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -202,10 +203,11 @@ function SignupForm() {
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label htmlFor="signup-password" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Password
               </label>
               <input
+                id="signup-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -234,10 +236,11 @@ function SignupForm() {
               )}
             </div>
             <div>
-              <label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <label htmlFor="signup-confirm-password" className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted-foreground">
                 Confirm Password
               </label>
               <input
+                id="signup-confirm-password"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -249,9 +252,9 @@ function SignupForm() {
             <button
               type="submit"
               disabled={loading}
-              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-semibold tracking-wide text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-md bg-primary py-2.5 text-sm font-semibold tracking-wide text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+              {loading && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
               Create Account
             </button>
           </form>
@@ -266,9 +269,9 @@ function SignupForm() {
 
           <button
             onClick={handleGoogle}
-            className="flex w-full items-center justify-center gap-2 rounded-md border border-border bg-card py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+            className="flex w-full items-center justify-center gap-2 rounded-md border border-border bg-card py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
                 fill="#4285F4"

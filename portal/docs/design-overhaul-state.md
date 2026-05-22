@@ -28,7 +28,7 @@
 | Report Viewer | `/report` | `src/app/report/page.tsx` | done |
 | App Shell | -- | `src/app/dashboard/layout.tsx` | done |
 | Not Found | -- | `src/app/not-found.tsx` | done |
-| Global Error | -- | `src/app/global-error.tsx` | done |
+| Global Error | -- | `src/app/global-error.tsx` | removed (incompatible with static export) |
 
 ## Design Direction
 **Chosen:** Fieldwork -- warm, grounded, built for tradespeople who value craft over flash
@@ -88,11 +88,20 @@ See `portal/docs/design-system.md` — complete Fieldwork system with Tailwind v
 - Report viewer page updated with design tokens
 
 ## Phase 9 (Polish) — Complete
+- [x] Step 0: Context7 research — Tailwind v4 transition/animation utilities confirmed
+- [x] Step 1: Micro-interactions — `btn-interactive`, `card-interactive`, input focus glow, `link-underline` classes added to globals.css and applied to landing page CTAs, pricing cards, comparison cards
+- [x] Step 2: Scroll-triggered reveals — IntersectionObserver in landing page, `.reveal` + `.reveal-stagger` classes on features heading, comparison cards, stats, pricing, CTA sections
+- [x] Step 3: Page load orchestration — `.hero-orchestrate` class with staggered `hero-enter` keyframes on hero right panel (badge → headline → paragraph → CTA → metric)
+- [x] Step 4: Toast/notification styling — skipped, no toast library in project
+- [x] Step 5: Image treatments — `.img-hover-zoom` class added; CSS background images (no `<img>` tags to lazy-load)
+- [x] Step 6: Dark mode — skipped, design system has no dark tokens
+- [x] Step 7: Responsive fine-tuning — verified at 1440px, 1280px, 1024px, 768px, 390px; no overflow or layout issues
+- [x] Step 8: Accessibility — label/input `htmlFor`/`id` associations on login+signup; `aria-hidden` on Loader2 spinners and Google SVG; `focus-visible:ring-*` on all buttons
+- [x] Step 9: `prefers-reduced-motion` — global media query disables all animation/transition durations
+- [x] Step 10: Anti-pattern sweep — all 12 APs checked, all pass (Split Story hero, paired comparisons not 3-col grid, Top Rail not sidebar, walnut primary not blue, mixed radii, varied spacing, 4+ SaaS conventions broken)
+- [x] Step 11: Console branding — ASCII "INSPECTLY" art in brass (#C29650), tagline "The clipboard retires today." in walnut, URL in muted; placed in layout.tsx `<script>`
 - Zero `teal-` or `slate-` tokens remaining in any `.tsx` file
 - All components migrated to semantic design tokens
-- `font-heading` applied to all headings
-- `rounded-lg` standardized (no rounded-2xl/rounded-xl)
-- ReportViewer.tsx + AccessCodeEntry.tsx fully converted
 
 ## Phase 10 (Visual Verification) — Complete
 - Landing: Split Story hero, warm walnut nav, brass accents, responsive mobile layout
