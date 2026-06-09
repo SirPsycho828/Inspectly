@@ -30,6 +30,18 @@
       {
         "source": "/r/**",
         "destination": "/report/index.html"
+      },
+      {
+        "source": "/dashboard/**",
+        "destination": "/dashboard/index.html"
+      },
+      {
+        "source": "/login",
+        "destination": "/login/index.html"
+      },
+      {
+        "source": "/signup",
+        "destination": "/signup/index.html"
       }
     ]
   }

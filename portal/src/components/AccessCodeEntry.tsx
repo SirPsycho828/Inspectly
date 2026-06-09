@@ -104,32 +104,32 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-background to-accent/5 flex flex-col">
       {/* Header */}
       <header className="py-6 px-4 text-center">
         <div className="inline-flex items-center gap-2">
-          <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-            <FileText className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 bg-primary rounded-md flex items-center justify-center">
+            <FileText className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="text-xl font-bold text-slate-900 tracking-tight">Inspectly</span>
+          <span className="text-xl font-bold text-foreground tracking-tight">Inspectly</span>
         </div>
       </header>
 
       {/* Card */}
       <main className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-lg border border-slate-100 p-8">
+          <div className="bg-card rounded-lg shadow-lg border border-border p-8">
             {/* Icon */}
             <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 bg-teal-50 rounded-full flex items-center justify-center">
-                <Shield className="w-8 h-8 text-teal-600" />
+              <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center">
+                <Shield className="w-8 h-8 text-primary" />
               </div>
             </div>
 
             {/* Heading */}
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-slate-900 mb-2">Enter your access code</h1>
-              <p className="text-slate-500 text-sm leading-relaxed">
+              <h1 className="text-2xl font-heading font-700 text-foreground mb-2">Enter your access code</h1>
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 Check your email or text message for your 6-character access code.
               </p>
             </div>
@@ -137,7 +137,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
             {/* Lockout state */}
             {isLocked ? (
               <div className="text-center">
-                <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
                   <p className="text-red-700 font-semibold mb-1">Too many failed attempts</p>
                   <p className="text-red-600 text-sm mb-3">
                     Please try again in {LOCKOUT_MINUTES} minutes.
@@ -151,7 +151,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
               <>
                 {/* Code Input */}
                 <div className="mb-4">
-                  <label htmlFor="access-code" className="block text-sm font-medium text-slate-700 mb-2 text-center">
+                  <label htmlFor="access-code" className="block text-sm font-medium text-secondary-foreground mb-2 text-center">
                     Access Code
                   </label>
                   <input
@@ -169,7 +169,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
                     disabled={loading}
                     placeholder="XXXXXX"
                     maxLength={6}
-                    className="w-full text-center text-3xl font-mono tracking-[0.5em] font-bold text-slate-900 border-2 border-slate-200 rounded-xl px-4 py-4 outline-none transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-100 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-slate-200 placeholder:tracking-[0.5em]"
+                    className="w-full text-center text-3xl font-mono tracking-[0.5em] font-bold text-foreground border-2 border-border rounded-lg px-4 py-4 outline-none transition-all focus:border-ring focus:ring-4 focus:ring-ring/20 disabled:opacity-50 disabled:cursor-not-allowed placeholder:text-muted placeholder:tracking-[0.5em]"
                   />
                   {/* Character counter dots */}
                   <div className="flex justify-center gap-2 mt-3">
@@ -177,7 +177,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
                       <div
                         key={i}
                         className={`w-2 h-2 rounded-full transition-all ${
-                          i < code.length ? 'bg-teal-500 scale-125' : 'bg-slate-200'
+                          i < code.length ? 'bg-accent scale-125' : 'bg-muted'
                         }`}
                       />
                     ))}
@@ -186,7 +186,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
 
                 {/* Error */}
                 {error && (
-                  <div className="mb-4 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700 text-center">
+                  <div className="mb-4 bg-red-50 border border-red-200 rounded-md px-4 py-3 text-sm text-red-700 text-center">
                     {error}
                     {attempts > 0 && attempts < MAX_ATTEMPTS && (
                       <span className="block text-xs text-red-500 mt-1">
@@ -200,11 +200,11 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
                 <button
                   onClick={() => submit()}
                   disabled={loading || code.length !== 6}
-                  className="w-full py-3.5 px-6 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl transition-all focus:outline-none focus:ring-4 focus:ring-teal-200 active:scale-[0.99]"
+                  className="w-full py-3.5 px-6 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground text-primary-foreground font-semibold rounded-lg transition-all focus:outline-none focus:ring-4 focus:ring-ring/20 active:scale-[0.99]"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
                       Verifying...
                     </span>
                   ) : (
@@ -215,10 +215,10 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
             )}
 
             {/* Help Section */}
-            <div className="mt-6 border-t border-slate-100 pt-5">
+            <div className="mt-6 border-t border-border pt-5">
               <button
                 onClick={() => setHelpOpen(!helpOpen)}
-                className="w-full flex items-center justify-between text-sm text-slate-500 hover:text-slate-700 transition-colors"
+                className="w-full flex items-center justify-between text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <span>Didn&apos;t receive a code?</span>
                 {helpOpen ? (
@@ -229,29 +229,29 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
               </button>
 
               {helpOpen && (
-                <div className="mt-4 space-y-3 text-sm text-slate-600">
-                  <div className="bg-slate-50 rounded-lg p-4 space-y-2">
-                    <p className="font-medium text-slate-700">Check the following:</p>
+                <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+                  <div className="bg-muted/50 rounded-md p-4 space-y-2">
+                    <p className="font-medium text-secondary-foreground">Check the following:</p>
                     <ul className="space-y-1.5 list-none">
                       <li className="flex items-start gap-2">
-                        <span className="text-teal-500 mt-0.5">•</span>
+                        <span className="text-accent mt-0.5">•</span>
                         <span>Check your spam or junk mail folder</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-teal-500 mt-0.5">•</span>
+                        <span className="text-accent mt-0.5">•</span>
                         <span>Look for a text message from your inspector</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-teal-500 mt-0.5">•</span>
+                        <span className="text-accent mt-0.5">•</span>
                         <span>The code is 6 characters (letters and numbers)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-teal-500 mt-0.5">•</span>
+                        <span className="text-accent mt-0.5">•</span>
                         <span>Codes expire after 30 days</span>
                       </li>
                     </ul>
                   </div>
-                  <p className="text-slate-500 text-xs text-center">
+                  <p className="text-muted-foreground text-xs text-center">
                     Still having trouble? Contact your home inspector directly.
                   </p>
                 </div>
@@ -259,7 +259,7 @@ export function AccessCodeEntry({ reportId, onVerify, initialError = '' }: Acces
             </div>
           </div>
 
-          <p className="text-center text-xs text-slate-400 mt-6">
+          <p className="text-center text-xs text-muted-foreground mt-6">
             Your report is protected with end-to-end access control.
           </p>
         </div>

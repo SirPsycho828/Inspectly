@@ -51,7 +51,9 @@
         {
           "photosPermission": "Inspectly needs photo library access to attach existing photos."
         }
-      ]
+      ],
+      "expo-asset",
+      "@react-native-google-signin/google-signin"
     ]
   }
 }
