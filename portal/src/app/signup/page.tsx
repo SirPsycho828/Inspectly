@@ -41,6 +41,7 @@ function SignupForm() {
 
   useEffect(() => {
     if (authState === 'authenticated') router.replace('/dashboard');
+    if (authState === 'needs_onboarding') router.replace('/onboarding');
   }, [authState, router]);
 
   async function handleSubmit(e: React.FormEvent) {
