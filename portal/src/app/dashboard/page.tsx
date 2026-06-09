@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { collection, query, where, orderBy, getDocs, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
-import { ClipboardList, FileText, Clock, CalendarDays, MapPin, Loader2, ArrowRight } from 'lucide-react';
+import { ClipboardList, FileText, Clock, CalendarDays, MapPin, Loader2, ArrowRight, Smartphone, Download } from 'lucide-react';
+import { EmptyState } from '@/components/ux/EmptyState';
+import { NextStepCard } from '@/components/ux/NextStepCard';
+import { GuidanceTip } from '@/components/ux/GuidanceTip';
 
 const statusColors: Record<string, string> = {
   draft: 'bg-muted text-muted-foreground',
@@ -70,53 +73,94 @@ export default function DashboardHome() {
   }, [user]);
 
   const statCards = [
-    { label: 'Total Inspections', value: stats.total, icon: ClipboardList, color: 'bg-accent/10 text-accent' },
-    { label: 'Published Reports', value: stats.published, icon: FileText, color: 'bg-success/15 text-success' },
-    { label: 'In Progress', value: stats.inProgress, icon: Clock, color: 'bg-warning/15 text-warning' },
-    { label: 'This Month', value: stats.thisMonth, icon: CalendarDays, color: 'bg-muted text-muted-foreground' },
+    { label: 'Total Inspections', value: stats.total, icon: ClipboardList, color: 'bg-accent/10 text-accent', href: '/dashboard/inspections' },
+    { label: 'Published Reports', value: stats.published, icon: FileText, color: 'bg-success/15 text-success', href: '/dashboard/reports' },
+    { label: 'In Progress', value: stats.inProgress, icon: Clock, color: 'bg-warning/15 text-warning', href: '/dashboard/inspections' },
+    { label: 'This Month', value: stats.thisMonth, icon: CalendarDays, color: 'bg-muted text-muted-foreground', href: '/dashboard/inspections' },
   ];
 
   if (loading) {
     return <div className="flex items-center justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-accent" /></div>;
   }
 
+  const isNewUser = stats.total === 0;
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="font-heading text-2xl font-700 text-foreground">Welcome back, {user?.displayName?.split(' ')[0]}</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Here is an overview of your inspection activity.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {isNewUser
+            ? 'Get started by downloading the Inspectly mobile app and running your first inspection.'
+            : 'Here is an overview of your inspection activity.'}
+        </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((s) => {
-          const Icon = s.icon;
-          return (
-            <div key={s.label} className="rounded-lg border border-border bg-card p-5 shadow-sm">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-muted-foreground">{s.label}</p>
-                <div className={`flex h-10 w-10 items-center justify-center rounded-md ${s.color}`}>
-                  <Icon className="h-5 w-5" />
+      {/* Getting Started — only for new users with zero inspections */}
+      {isNewUser && (
+        <div className="space-y-3">
+          <h2 className="font-heading text-lg font-600 text-foreground">Getting Started</h2>
+          <GuidanceTip id="dashboard-portal-role">
+            This dashboard is your web companion for viewing inspections and reports. All inspections are created from the Inspectly mobile app — download it to get started.
+          </GuidanceTip>
+          <NextStepCard
+            title="Download the mobile app"
+            description="Create inspections, capture findings, and publish reports from your phone."
+            href="#"
+            actionLabel="Get the App"
+            icon={<Download className="h-5 w-5 text-accent" />}
+          />
+          <NextStepCard
+            title="Run your first inspection"
+            description="Once the app is installed, create an inspection to start documenting findings."
+            href="/dashboard/templates"
+            actionLabel="View Templates"
+            icon={<ClipboardList className="h-5 w-5 text-accent" />}
+          />
+        </div>
+      )}
+
+      {/* Stats */}
+      {!isNewUser && (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {statCards.map((s) => {
+            const Icon = s.icon;
+            return (
+              <Link key={s.label} href={s.href} className="card-interactive rounded-lg border border-border bg-card p-5 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-muted-foreground">{s.label}</p>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-md ${s.color}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
                 </div>
-              </div>
-              <p className="mt-2 text-3xl font-bold text-foreground">{s.value}</p>
-            </div>
-          );
-        })}
-      </div>
+                <p className="mt-2 text-3xl font-bold text-foreground">{s.value}</p>
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
+      {/* Recent Inspections */}
       <div className="rounded-lg border border-border bg-card shadow-sm">
         <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-heading text-lg font-600 text-foreground">Recent Inspections</h2>
-          <Link href="/dashboard/inspections" className="flex items-center gap-1 text-sm font-medium text-accent hover:text-accent">
-            View All <ArrowRight className="h-4 w-4" />
-          </Link>
+          {recentInspections.length > 0 && (
+            <Link href="/dashboard/inspections" className="flex items-center gap-1 text-sm font-medium text-accent hover:text-accent">
+              View All <ArrowRight className="h-4 w-4" />
+            </Link>
+          )}
         </div>
         {recentInspections.length === 0 ? (
-          <div className="px-6 py-12 text-center text-sm text-muted-foreground">No inspections yet. Start your first inspection from the mobile app.</div>
+          <EmptyState
+            icon={<ClipboardList className="h-6 w-6 text-muted-foreground" />}
+            title="No inspections yet"
+            description="Inspections are created from the Inspectly mobile app. Download it to run your first inspection and your activity will appear here."
+            action={isNewUser ? undefined : { label: 'View Templates', href: '/dashboard/templates' }}
+          />
         ) : (
           <div className="divide-y divide-border">
             {recentInspections.map((insp: any) => (
-              <div key={insp.id} className="flex items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/50">
+              <Link key={insp.id} href="/dashboard/inspections" className="flex items-center gap-4 px-6 py-4 transition-colors hover:bg-muted/50">
                 <div className="flex h-10 w-10 items-center justify-center rounded-md bg-muted">
                   <MapPin className="h-5 w-5 text-muted-foreground" />
                 </div>
@@ -127,8 +171,8 @@ export default function DashboardHome() {
                 <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[insp.status] || 'bg-muted text-muted-foreground'}`}>
                   {statusLabels[insp.status] || insp.status}
                 </span>
-                <span className="text-xs text-muted-foreground">{formatDate(insp.updatedAt)}</span>
-              </div>
+                <span className="hidden text-xs text-muted-foreground sm:block">{formatDate(insp.updatedAt)}</span>
+              </Link>
             ))}
           </div>
         )}

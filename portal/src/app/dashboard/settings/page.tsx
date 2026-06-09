@@ -1,7 +1,8 @@
 'use client';
 
 import { useAuth } from '@/lib/auth';
-import { User, Mail, CreditCard, Building2, Shield, LogOut } from 'lucide-react';
+import { User, Mail, CreditCard, Building2, Shield, LogOut, Smartphone } from 'lucide-react';
+import { GuidanceTip } from '@/components/ux/GuidanceTip';
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
@@ -11,6 +12,10 @@ export default function SettingsPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <h1 className="font-heading text-2xl font-700 text-foreground">Settings</h1>
+
+      <GuidanceTip id="settings-edit-info" icon={<Smartphone className="h-4 w-4" />}>
+        Profile details like your name, license number, and firm membership are managed from the Inspectly mobile app. Changes sync automatically to this dashboard.
+      </GuidanceTip>
 
       {/* Profile */}
       <div className="rounded-lg border border-border bg-card shadow-sm">
@@ -42,7 +47,7 @@ export default function SettingsPage() {
               <label className="text-xs font-medium text-muted-foreground">License Number</label>
               <div className="mt-1 flex items-center gap-2">
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
-                <p className="text-sm text-foreground">{user.licenseNumber || 'Not set'}</p>
+                <p className="text-sm text-foreground">{user.licenseNumber || <span className="text-muted-foreground italic">Set via mobile app</span>}</p>
               </div>
             </div>
           </div>
@@ -66,10 +71,14 @@ export default function SettingsPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-4">
-              <Building2 className="mx-auto h-10 w-10 text-muted" />
-              <p className="mt-2 text-sm text-muted-foreground">You are not part of a firm.</p>
-              <p className="mt-1 text-xs text-muted-foreground">Create or join a firm from the mobile app.</p>
+            <div className="text-center py-6">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-muted">
+                <Building2 className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <p className="text-sm font-medium text-foreground">Not part of a firm</p>
+              <p className="mt-1 max-w-xs mx-auto text-sm text-muted-foreground">
+                Create or join a firm from the Inspectly mobile app under Settings &rarr; Firm. Firm membership enables team management and shared templates.
+              </p>
             </div>
           )}
         </div>
