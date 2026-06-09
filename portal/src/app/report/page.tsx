@@ -56,10 +56,10 @@ export default function ReportPage() {
 
   if (view.kind === 'loading' || view.kind === 'loading-report') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-teal-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-slate-500 text-sm">Loading report...</p>
+          <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground text-sm">Loading report...</p>
         </div>
       </div>
     );
@@ -67,10 +67,10 @@ export default function ReportPage() {
 
   if (view.kind === 'no-id') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-sm px-4">
-          <h1 className="text-xl font-semibold text-slate-900 mb-2">Invalid Report Link</h1>
-          <p className="text-slate-500 text-sm">
+          <h1 className="text-xl font-semibold text-foreground mb-2">Invalid Report Link</h1>
+          <p className="text-muted-foreground text-sm">
             This link doesn&apos;t appear to be valid. Please check the link from your email or text message and try again.
           </p>
         </div>
@@ -80,10 +80,10 @@ export default function ReportPage() {
 
   if (view.kind === 'error') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-sm px-4">
-          <h1 className="text-xl font-semibold text-red-600 mb-2">Error</h1>
-          <p className="text-slate-500 text-sm">{view.message}</p>
+          <h1 className="text-xl font-semibold text-destructive mb-2">Error</h1>
+          <p className="text-muted-foreground text-sm">{view.message}</p>
         </div>
       </div>
     );
