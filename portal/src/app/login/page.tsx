@@ -17,6 +17,7 @@ function LoginForm() {
 
   useEffect(() => {
     if (authState === 'authenticated') router.replace('/dashboard');
+    if (authState === 'needs_onboarding') router.replace('/onboarding');
   }, [authState, router]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -25,24 +26,18 @@ function LoginForm() {
     setLoading(true);
     try {
       await signIn(email, password);
-    } catch (err: any) {
-      setError(
-        err.code === 'auth/invalid-credential'
-          ? 'Invalid email or password.'
-          : err.message || 'Sign in failed.'
-      );
+    } catch {
+      setError('Invalid email or password.');
     } finally {
       setLoading(false);
     }
   }
 
   async function handleGoogle() {
-    setError('');
     try {
       await signInWithGoogle();
-    } catch (err: any) {
-      if (err.code !== 'auth/popup-closed-by-user')
-        setError(err.message || 'Google sign in failed.');
+    } catch {
+      setError('Google sign-in failed. Please try again.');
     }
   }
 
@@ -56,36 +51,24 @@ function LoginForm() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Brand Panel — left side, hidden on mobile */}
-      <div className="relative hidden w-1/2 lg:block">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/hero-house.jpg')" }}
-        />
-        <div className="absolute inset-0 bg-primary/80" />
-        <div className="relative flex h-full flex-col justify-between p-12">
-          <Link href="/" className="inline-flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent">
-              <Shield className="h-4 w-4 text-primary" />
-            </div>
-            <span className="font-heading text-xl font-bold text-primary-foreground">
-              Inspectly
-            </span>
-          </Link>
-          <div className="max-w-md">
-            <h2 className="font-heading text-3xl font-700 leading-tight text-primary-foreground">
-              Professional reports,<br />
-              delivered on-site.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-primary-foreground/60">
-              AI-powered inspection reports with photo documentation and instant client
-              delivery. Built for professionals who value their time.
-            </p>
+      {/* Brand Panel — left side */}
+      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-primary p-12 lg:flex">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-accent">
+            <Shield className="h-5 w-5 text-primary" />
           </div>
-          <p className="text-sm text-primary-foreground/30">
-            &copy; {new Date().getFullYear()} Inspectly
-          </p>
+          <span className="font-heading text-xl font-bold text-primary-foreground">
+            Inspectly
+          </span>
+        </Link>
+        <div>
+          <blockquote className="border-l-2 border-accent/50 pl-6">
+            <p className="text-lg font-300 italic text-primary-foreground/80">
+              &ldquo;The clipboard retires today.&rdquo;
+            </p>
+          </blockquote>
         </div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(194,150,80,0.08),transparent_50%)]" />
       </div>
 
       {/* Form Panel — right side */}
@@ -185,22 +168,10 @@ function LoginForm() {
             className="flex w-full items-center justify-center gap-2 rounded-md border border-border bg-card py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                fill="#4285F4"
-              />
-              <path
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                fill="#34A853"
-              />
-              <path
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                fill="#EA4335"
-              />
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
             </svg>
             Google
           </button>
