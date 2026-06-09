@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { ToastProvider, useToast } from '@/components/ux/Toast';
+import { TourProvider } from '@/components/ux/TourProvider';
 import {
   LayoutDashboard,
   ClipboardList,
@@ -20,11 +21,11 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'Inspections', href: '/dashboard/inspections', icon: ClipboardList },
-  { label: 'Reports', href: '/dashboard/reports', icon: FileText },
-  { label: 'Templates', href: '/dashboard/templates', icon: ListChecks },
-  { label: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, tourId: 'dashboard' },
+  { label: 'Inspections', href: '/dashboard/inspections', icon: ClipboardList, tourId: 'inspections' },
+  { label: 'Reports', href: '/dashboard/reports', icon: FileText, tourId: 'reports' },
+  { label: 'Templates', href: '/dashboard/templates', icon: ListChecks, tourId: 'templates' },
+  { label: 'Settings', href: '/dashboard/settings', icon: Settings, tourId: 'settings' },
 ];
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -53,6 +54,11 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
         <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
+  }
+
+  if (authState === 'needs_onboarding' || authState === 'unverified') {
+    if (typeof window !== 'undefined') router.replace('/onboarding');
+    return null;
   }
 
   if (authState !== 'authenticated') {
@@ -96,6 +102,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  data-tour={item.tourId}
                   className={`flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                     active
                       ? 'bg-primary-foreground/15 text-primary-foreground'
@@ -254,15 +261,13 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <ToastProvider>
-        <DashboardShell>{children}</DashboardShell>
+        <TourProvider>
+          <DashboardShell>{children}</DashboardShell>
+        </TourProvider>
       </ToastProvider>
     </AuthProvider>
   );
