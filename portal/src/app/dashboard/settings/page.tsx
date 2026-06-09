@@ -1,11 +1,17 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
-import { User, Mail, CreditCard, Building2, Shield, LogOut, Smartphone } from 'lucide-react';
+import { useTour } from '@/components/ux/TourProvider';
+import { User, Mail, CreditCard, Building2, Shield, LogOut, Smartphone, RotateCcw, Navigation } from 'lucide-react';
 import { GuidanceTip } from '@/components/ux/GuidanceTip';
 
 export default function SettingsPage() {
   const { user, signOut } = useAuth();
+  const { startTour } = useTour();
+  const router = useRouter();
 
   if (!user) return null;
 
@@ -81,6 +87,41 @@ export default function SettingsPage() {
               </p>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Onboarding */}
+      <div className="rounded-lg border border-border bg-card shadow-sm">
+        <div className="border-b border-border px-6 py-4">
+          <h2 className="font-heading text-lg font-600 text-foreground">Onboarding</h2>
+        </div>
+        <div className="space-y-4 p-6">
+          <p className="text-sm text-muted-foreground">
+            Re-run the setup wizard or replay the dashboard tour anytime.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={async () => {
+                if (!user) return;
+                await updateDoc(doc(db, 'users', user.id), { onboardingComplete: false });
+                window.location.href = '/onboarding';
+              }}
+              className="flex items-center gap-2 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              <RotateCcw className="h-4 w-4" />
+              Restart Setup Wizard
+            </button>
+            <button
+              onClick={() => {
+                router.push('/dashboard');
+                setTimeout(() => startTour(), 500);
+              }}
+              className="flex items-center gap-2 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              <Navigation className="h-4 w-4" />
+              Replay App Tour
+            </button>
+          </div>
         </div>
       </div>
 
