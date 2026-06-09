@@ -111,12 +111,15 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const [run, setRun] = useState(false);
 
   useEffect(() => {
-    const pending = localStorage.getItem('inspectly-tour-pending');
-    if (pending === 'true') {
-      localStorage.removeItem('inspectly-tour-pending');
-      const timer = setTimeout(() => setRun(true), 700);
-      return () => clearTimeout(timer);
-    }
+    const completed = localStorage.getItem('inspectly-tour-completed');
+    if (completed === 'true') return;
+
+    // Remove pending flag if set (from onboarding wizard)
+    localStorage.removeItem('inspectly-tour-pending');
+
+    // Auto-start tour for any user who hasn't seen it yet
+    const timer = setTimeout(() => setRun(true), 700);
+    return () => clearTimeout(timer);
   }, []);
 
   const startTour = useCallback(() => {
