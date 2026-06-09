@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AuthProvider, useAuth } from '@/lib/auth';
+import { ToastProvider, useToast } from '@/components/ux/Toast';
 import {
   LayoutDashboard,
   ClipboardList,
@@ -28,10 +29,12 @@ const navItems = [
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, authState, signOut } = useAuth();
+  const { toast } = useToast();
   const pathname = usePathname();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -135,7 +138,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={() => {
                     setUserMenuOpen(false);
-                    signOut();
+                    setShowSignOutConfirm(true);
                   }}
                   className="mt-1 flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
                 >
@@ -200,7 +203,7 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  signOut();
+                  setShowSignOutConfirm(true);
                 }}
                 className="mt-1 flex w-full items-center gap-2 rounded-md px-3 py-2.5 text-sm text-primary-foreground/60 transition-colors hover:bg-primary-foreground/10"
               >
@@ -216,6 +219,37 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 lg:px-8 lg:py-8">
         {children}
       </main>
+
+      {/* Sign Out Confirmation */}
+      {showSignOutConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 bg-foreground/50" onClick={() => setShowSignOutConfirm(false)} />
+          <div className="relative w-full max-w-sm rounded-lg border border-border bg-card p-6 shadow-xl animate-slide-up">
+            <h3 className="font-heading text-lg font-600 text-foreground">Sign out?</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              You&apos;ll need to sign in again to access your dashboard.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setShowSignOutConfirm(false)}
+                className="rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  setShowSignOutConfirm(false);
+                  toast('Signed out successfully');
+                  signOut();
+                }}
+                className="rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -227,7 +261,9 @@ export default function DashboardLayout({
 }) {
   return (
     <AuthProvider>
-      <DashboardShell>{children}</DashboardShell>
+      <ToastProvider>
+        <DashboardShell>{children}</DashboardShell>
+      </ToastProvider>
     </AuthProvider>
   );
 }

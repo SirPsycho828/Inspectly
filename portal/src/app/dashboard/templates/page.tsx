@@ -5,6 +5,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
 import { ListChecks, Loader2, Lock } from 'lucide-react';
+import { EmptyState } from '@/components/ux/EmptyState';
+import { GuidanceTip } from '@/components/ux/GuidanceTip';
 
 export default function TemplatesPage() {
   const { user } = useAuth();
@@ -49,13 +51,22 @@ export default function TemplatesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-heading text-2xl font-700 text-foreground">Checklist Templates</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Manage your inspection checklist templates.</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Templates define the sections and checklist items used during an inspection. System templates are built-in; custom templates can be created from the mobile app.
+        </p>
       </div>
 
+      <GuidanceTip id="templates-overview">
+        Each template contains sections (like Roof, Electrical, Plumbing) with checklist items your inspectors will follow during a walkthrough. When starting an inspection in the mobile app, you choose which template to use.
+      </GuidanceTip>
+
       {templates.length === 0 ? (
-        <div className="rounded-lg border border-border bg-card px-6 py-16 text-center shadow-sm">
-          <ListChecks className="mx-auto h-12 w-12 text-muted" />
-          <p className="mt-4 text-sm font-medium text-foreground">No templates available</p>
+        <div className="rounded-lg border border-border bg-card shadow-sm">
+          <EmptyState
+            icon={<ListChecks className="h-6 w-6 text-muted-foreground" />}
+            title="No templates available"
+            description="System templates will appear here once configured. You can also create custom templates from the Inspectly mobile app."
+          />
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

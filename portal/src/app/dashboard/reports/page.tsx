@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
-import { FileText, MapPin, Search, Loader2, X, Calendar } from 'lucide-react';
+import Link from 'next/link';
+import { FileText, MapPin, Search, Loader2, X, Calendar, ChevronRight, ExternalLink, Copy } from 'lucide-react';
+import { EmptyState } from '@/components/ux/EmptyState';
 
 const severityColors: Record<string, string> = {
   critical: 'bg-destructive/10 text-destructive',
@@ -74,13 +76,27 @@ export default function ReportsPage() {
         </div>
       </div>
 
+      {/* Summary count */}
+      {reports.length > 0 && (
+        <p className="text-sm text-muted-foreground">{reports.length} published report{reports.length !== 1 ? 's' : ''}</p>
+      )}
+
       <div className="rounded-lg border border-border bg-card shadow-sm">
         {filtered.length === 0 ? (
-          <div className="px-6 py-16 text-center">
-            <FileText className="mx-auto h-12 w-12 text-muted" />
-            <p className="mt-4 text-sm font-medium text-foreground">No published reports yet</p>
-            <p className="mt-1 text-sm text-muted-foreground">Published inspection reports will appear here.</p>
-          </div>
+          search.trim() ? (
+            <div className="px-6 py-16 text-center">
+              <Search className="mx-auto h-12 w-12 text-muted" />
+              <p className="mt-4 text-sm font-medium text-foreground">No results for &ldquo;{search}&rdquo;</p>
+              <p className="mt-1 text-sm text-muted-foreground">Try a different address or city name.</p>
+              <button onClick={() => setSearch('')} className="mt-4 text-sm font-medium text-accent hover:underline">Clear search</button>
+            </div>
+          ) : (
+            <EmptyState
+              icon={<FileText className="h-6 w-6 text-muted-foreground" />}
+              title="No published reports yet"
+              description="When you publish an inspection from the mobile app, the report will appear here. You can then view it, share the portal link, and manage access."
+            />
+          )
         ) : (
           <div className="divide-y divide-border">
             {filtered.map((report: any) => {
@@ -111,6 +127,7 @@ export default function ReportsPage() {
                     {fc.minor > 0 && <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${severityColors.minor}`}>{fc.minor}</span>}
                     {fc.informational > 0 && <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${severityColors.informational}`}>{fc.informational}</span>}
                   </div>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                 </button>
               );
             })}
@@ -180,6 +197,31 @@ export default function ReportsPage() {
               )}
               <div className="text-xs text-muted-foreground">
                 {selected.totalPhotos || 0} photos
+              </div>
+              {/* Report actions */}
+              <div className="space-y-2 border-t border-border pt-4">
+                <h3 className="font-heading text-sm font-medium text-muted-foreground">Share</h3>
+                <div className="flex flex-col gap-2">
+                  <a
+                    href={`/r/${selected.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-interactive flex items-center justify-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm transition-all hover:brightness-110"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    View in Portal
+                  </a>
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}/r/${selected.id}`;
+                      navigator.clipboard.writeText(url);
+                    }}
+                    className="flex items-center justify-center gap-2 rounded-md border border-border px-4 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted/50"
+                  >
+                    <Copy className="h-4 w-4" />
+                    Copy Report Link
+                  </button>
+                </div>
               </div>
             </div>
           </div>

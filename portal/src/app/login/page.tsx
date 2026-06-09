@@ -7,12 +7,13 @@ import { Shield, Loader2 } from 'lucide-react';
 import { AuthProvider, useAuth } from '@/lib/auth';
 
 function LoginForm() {
-  const { authState, signIn, signInWithGoogle } = useAuth();
+  const { authState, signIn, signInWithGoogle, resetPassword } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   useEffect(() => {
     if (authState === 'authenticated') router.replace('/dashboard');
@@ -140,6 +141,29 @@ function LoginForm() {
                 placeholder="Enter your password"
               />
             </div>
+            <div className="flex justify-end">
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!email) { setError('Enter your email address first.'); return; }
+                  setError('');
+                  try {
+                    await resetPassword(email);
+                    setResetSent(true);
+                  } catch {
+                    setError('Could not send reset email. Check the address and try again.');
+                  }
+                }}
+                className="text-xs font-medium text-accent hover:underline"
+              >
+                Forgot password?
+              </button>
+            </div>
+            {resetSent && (
+              <div className="rounded-md bg-success/10 px-4 py-3 text-sm text-success">
+                Password reset email sent to {email}. Check your inbox.
+              </div>
+            )}
             <button
               type="submit"
               disabled={loading}

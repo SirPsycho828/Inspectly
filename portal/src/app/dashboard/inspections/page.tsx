@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
-import { ClipboardList, MapPin, Search, Loader2, X, Calendar, AlertTriangle } from 'lucide-react';
+import { ClipboardList, MapPin, Search, Loader2, X, Calendar, AlertTriangle, ChevronRight, FileText } from 'lucide-react';
+import { EmptyState } from '@/components/ux/EmptyState';
+import { GuidanceTip } from '@/components/ux/GuidanceTip';
 
 const statusColors: Record<string, string> = {
   draft: 'bg-muted text-muted-foreground',
@@ -101,13 +103,38 @@ export default function InspectionsPage() {
         ))}
       </div>
 
+      {/* Summary stats */}
+      {inspections.length > 0 && (
+        <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+          <span>{inspections.length} total</span>
+          <span className="text-warning">{inspections.filter((i: any) => i.status === 'in_progress').length} in progress</span>
+          <span className="text-accent">{inspections.filter((i: any) => i.status === 'review').length} in review</span>
+          <span className="text-success">{inspections.filter((i: any) => i.status === 'published').length} published</span>
+        </div>
+      )}
+
       <div className="rounded-lg border border-border bg-card shadow-sm">
         {filtered.length === 0 ? (
-          <div className="px-6 py-16 text-center">
-            <ClipboardList className="mx-auto h-12 w-12 text-muted" />
-            <p className="mt-4 text-sm font-medium text-foreground">No inspections found</p>
-            <p className="mt-1 text-sm text-muted-foreground">Inspections created in the mobile app will appear here.</p>
-          </div>
+          search.trim() ? (
+            <div className="px-6 py-16 text-center">
+              <Search className="mx-auto h-12 w-12 text-muted" />
+              <p className="mt-4 text-sm font-medium text-foreground">No results for &ldquo;{search}&rdquo;</p>
+              <p className="mt-1 text-sm text-muted-foreground">Try a different address or client name.</p>
+              <button onClick={() => setSearch('')} className="mt-4 text-sm font-medium text-accent hover:underline">Clear search</button>
+            </div>
+          ) : inspections.length === 0 ? (
+            <EmptyState
+              icon={<ClipboardList className="h-6 w-6 text-muted-foreground" />}
+              title="No inspections yet"
+              description="Inspections are created from the Inspectly mobile app. Once you run your first inspection, it will appear here."
+            />
+          ) : (
+            <div className="px-6 py-16 text-center">
+              <ClipboardList className="mx-auto h-12 w-12 text-muted" />
+              <p className="mt-4 text-sm font-medium text-foreground">No inspections match this filter</p>
+              <p className="mt-1 text-sm text-muted-foreground">Try selecting a different tab.</p>
+            </div>
+          )
         ) : (
           <div className="divide-y divide-border">
             {filtered.map((insp: any) => {
@@ -139,6 +166,7 @@ export default function InspectionsPage() {
                   <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${statusColors[insp.status] || 'bg-muted text-muted-foreground'}`}>
                     {statusLabels[insp.status] || insp.status}
                   </span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
                 </button>
               );
             })}
@@ -209,6 +237,15 @@ export default function InspectionsPage() {
                   {selected.publishedAt && <p>Published: {formatDate(selected.publishedAt)}</p>}
                 </div>
               </div>
+              {selected.status === 'published' && selected.reportId && (
+                <a
+                  href={`/dashboard/reports`}
+                  className="btn-interactive flex items-center justify-center gap-2 rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-accent-foreground shadow-sm transition-all hover:brightness-110"
+                >
+                  <FileText className="h-4 w-4" />
+                  View Published Report
+                </a>
+              )}
             </div>
           </div>
         </div>
