@@ -66,7 +66,7 @@ export function ForgotPasswordScreen({ navigation }: Props) {
         <Text style={styles.successHeading}>Check your inbox</Text>
         <Text style={styles.successBody}>
           If an account exists for{' '}
-          <Text style={styles.successEmail}>{email.trim()}</Text>
+          <Text style={styles.successEmail}>{email.trim().toLowerCase()}</Text>
           , you'll receive a password reset link shortly.
         </Text>
         <Button

@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
-  apiKey: 'REDACTED_FIREBASE_API_KEY',
-  authDomain: 'inspectly-prod-app.firebaseapp.com',
-  projectId: 'inspectly-prod-app',
-  storageBucket: 'inspectly-prod-app.firebasestorage.app',
-  messagingSenderId: 'REDACTED_SENDER_ID',
-  appId: '1:REDACTED_SENDER_ID:web:5191e6bc907bf54d8a8d83',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];

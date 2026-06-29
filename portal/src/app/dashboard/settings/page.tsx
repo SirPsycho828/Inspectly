@@ -31,12 +31,12 @@ export default function SettingsPage() {
         <div className="space-y-4 p-6">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 text-lg font-bold text-accent">
-              {user.displayName?.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
+              {user.displayName?.trim().replace(/[^a-zA-Z\s]/g, '').split(' ').filter(Boolean).map((n) => n[0]).join('').toUpperCase().slice(0, 2) || 'U'}
             </div>
             <div>
               <p className="text-lg font-semibold text-foreground">{user.displayName}</p>
               <span className="inline-block rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent capitalize">
-                {user.role?.replace('_', ' ')}
+                {({'inspector': 'Inspector', 'firm_admin': 'Firm Admin'} as Record<string, string>)[user.role ?? ''] ?? 'Unknown'}
               </span>
             </div>
           </div>
