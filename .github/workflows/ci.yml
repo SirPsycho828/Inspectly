@@ -33,6 +33,10 @@ jobs:
 
       - name: Build
         run: npm run build
+        # These are dummy placeholder values, not real credentials. All
+        # NEXT_PUBLIC_* Firebase web config is non-secret by design (it ships
+        # in the client bundle); security comes from Firebase Security Rules,
+        # not from hiding these. They exist only so the CI build can compile.
         env:
           NEXT_PUBLIC_FIREBASE_API_KEY: test-key
           NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: test.firebaseapp.com
