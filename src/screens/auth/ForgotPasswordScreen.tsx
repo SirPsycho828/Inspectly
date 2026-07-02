@@ -14,6 +14,7 @@ import { AuthStackParamList } from '@/navigation/AuthNavigator';
 import { Button } from '@/components/ui';
 import { colors, typography, spacing, layout } from '@/constants/theme';
 import { sendPasswordReset } from '@/services/auth';
+import { sanitizeEmail } from '@/utils/sanitizeEmail';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'ForgotPassword'>;
 
@@ -66,7 +67,7 @@ export function ForgotPasswordScreen({ navigation }: Props) {
         <Text style={styles.successHeading}>Check your inbox</Text>
         <Text style={styles.successBody}>
           If an account exists for{' '}
-          <Text style={styles.successEmail}>{email.trim().toLowerCase()}</Text>
+          <Text style={styles.successEmail}>{sanitizeEmail(email)}</Text>
           , you'll receive a password reset link shortly.
         </Text>
         <Button

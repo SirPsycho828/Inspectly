@@ -10,6 +10,7 @@ import { Button } from '@/components/ui';
 import { colors, typography, spacing, layout } from '@/constants/theme';
 import { resendVerificationEmail, signOut } from '@/services/auth';
 import { useAuthContext } from '@/contexts/AuthContext';
+import { sanitizeEmail } from '@/utils/sanitizeEmail';
 
 export function VerifyEmailScreen() {
   const { firebaseUser } = useAuthContext();
@@ -71,7 +72,7 @@ export function VerifyEmailScreen() {
 
         <Text style={styles.body}>
           We sent a verification link to{'\n'}
-          <Text style={styles.email}>{firebaseUser?.email ?? 'your email address'}</Text>
+          <Text style={styles.email}>{sanitizeEmail(firebaseUser?.email) || 'your email address'}</Text>
         </Text>
 
         <Text style={styles.bodySecondary}>

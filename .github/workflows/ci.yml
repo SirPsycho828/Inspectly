@@ -31,16 +31,13 @@ jobs:
 
       - run: npm test
 
+      # Provide non-secret placeholder Firebase web config for the build.
+      # NEXT_PUBLIC_* values ship in the client bundle and are non-secret by
+      # design; security comes from Firebase Security Rules, not from hiding
+      # them. Sourced from the committed .env.example so no values are inlined
+      # in this workflow. The build only needs them present to compile.
+      - name: Prepare build env
+        run: cp .env.example .env
+
       - name: Build
         run: npm run build
-        # These are dummy placeholder values, not real credentials. All
-        # NEXT_PUBLIC_* Firebase web config is non-secret by design (it ships
-        # in the client bundle); security comes from Firebase Security Rules,
-        # not from hiding these. They exist only so the CI build can compile.
-        env:
-          NEXT_PUBLIC_FIREBASE_API_KEY: test-key
-          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: test.firebaseapp.com
-          NEXT_PUBLIC_FIREBASE_PROJECT_ID: test-project
-          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: test.firebasestorage.app
-          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '000000000000'
-          NEXT_PUBLIC_FIREBASE_APP_ID: '1:000:web:000'
